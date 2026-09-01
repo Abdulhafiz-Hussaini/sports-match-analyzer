@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import re
 
 from exceptions import ValidationError
@@ -137,3 +139,28 @@ class InputValidator:
             )
 
         return score
+
+    @staticmethod
+    def validate_date(date_str):
+        """
+        Validate a date string in YYYY-MM-DD format.
+        """
+
+        if date_str is None:
+            raise ValidationError("Date cannot be empty.")
+
+        date_str = str(date_str).strip()
+
+        if not date_str:
+            raise ValidationError("Date cannot be empty.")
+
+        if not re.match(r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$",date_str):
+            raise ValidationError("Invalid date format. Expected YYYY-MM-DD format.")
+
+        try:
+            datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            raise ValidationError(f"'{date_str}' is not a real calendar date.")
+
+        return date_str
+
