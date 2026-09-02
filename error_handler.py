@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from exceptions import (
     SportsAPIError,
     StorageError,
@@ -45,13 +47,12 @@ class ErrorHandler:
         )
 
     @staticmethod
-    def log_error(error):
+    def log_error(error, log_path = "error_log.txt"):
         """
-        Print technical information for debugging.
+        Write technical error information to log file.
         """
-
-        print(
-            f"[ERROR] "
-            f"{type(error).__name__}: "
-            f"{error}"
-        )
+        try:
+            with open(log_path, "a", encoding="utf-8") as log_file:
+                log_file.write(f"[{datetime.now()}] {type(error).__name__}: {error}\n")
+        except OSError:
+            print(f"[ERROR] Could not write to log file: {error}")
